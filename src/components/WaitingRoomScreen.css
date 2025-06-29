@@ -1,0 +1,110 @@
+/* Sala de Espera (WaitingRoomScreen) */
+.waiting-room {
+  max-width: 500px;
+  margin: 60px auto 0 auto;
+  background: rgba(255, 255, 255, 0.10);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  border: 1px solid rgba(255,255,255,0.18);
+  padding: 40px 32px 32px 32px;
+  text-align: center;
+  color: var(--text-primary);
+  backdrop-filter: blur(10px);
+  animation: fadeIn 0.7s;
+}
+
+.waiting-room h2 {
+  font-size: 2rem;
+  margin-bottom: 1.2rem;
+  color: var(--primary-color);
+  letter-spacing: 1px;
+}
+
+.waiting-room h3 {
+  font-size: 1.2rem;
+  color: var(--accent-color);
+  margin-bottom: 1rem;
+}
+
+.waiting-room ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 1.5rem;
+}
+
+.waiting-room li {
+  background: rgba(52, 152, 219, 0.10);
+  color: var(--text-primary);
+  border-radius: 10px;
+  margin: 0.5rem 0;
+  padding: 10px 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.waiting-room li span {
+  color: var(--primary-color);
+  font-size: 0.95em;
+  margin-left: 6px;
+  font-weight: 700;
+}
+
+.leave-btn {
+  background: linear-gradient(45deg, #e74c3c, #c0392b);
+  color: #fff;
+  border: none;
+  border-radius: 15px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 1.2rem 0 0.5rem 0;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: all 0.2s;
+}
+
+.leave-btn:hover {
+  background: linear-gradient(45deg, #c0392b, #e74c3c);
+  transform: translateY(-2px) scale(1.04);
+}
+
+.start-btn {
+  background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
+  color: #fff;
+  border: none;
+  border-radius: 15px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0.5rem 0 1rem 0;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: all 0.2s;
+}
+
+.start-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.waiting-room p {
+  color: var(--text-secondary);
+  margin-top: 1.5rem;
+  font-size: 1.05rem;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .waiting-room {
+    padding: 18px 6vw;
+    margin-top: 30px;
+  }
+  .waiting-room h2 {
+    font-size: 1.3rem;
+  }
+} 
