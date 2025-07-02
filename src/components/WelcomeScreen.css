@@ -128,14 +128,10 @@
     max-width: 90%;
   }
 
-  .game-title {
-    font-size: var(--font-size-3xl);
-    flex-direction: column;
-    gap: 0.5rem;
-  }
 
-  .serpent-icon {
+  .serpent-icon, .game-title {
     font-size: 2rem;
+    filter: drop-shadow(0 0 8px rgba(39, 174, 96, 0.5));
   }
 
   .welcome-content {

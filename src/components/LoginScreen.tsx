@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import type { Screen } from '../App';
 import './AuthScreen.css';
 import { loginUser } from '../api/ApiAuth';
+import { useUser } from '../context/UserContext';
 
 interface LoginScreenProps {
   onNavigate: (screen: Screen) => void;
@@ -9,6 +10,7 @@ interface LoginScreenProps {
 }
 
 const LoginScreen: React.FC<LoginScreenProps> = ({ onNavigate, onLogin }) => {
+  const { refreshUsername } = useUser();
   const [formData, setFormData] = useState({
     username: '',
     password: ''
@@ -34,6 +36,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onNavigate, onLogin }) => {
       }
       // Llamada real a la API
       const token = await loginUser({ username, password });
+      refreshUsername();
       onLogin(token);
     } catch (err: any) {
       if (err.response && err.response.data && err.response.data.message) {

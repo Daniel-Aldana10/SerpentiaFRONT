@@ -25,7 +25,6 @@ const RoomList: React.FC<Props> = ({ rooms, onJoin }) => (
             ))}
           </div>
         </section>
-        {/* Aquí podrías agregar un panel lateral o formulario de crear sala */}
       </div>
     </div>
   </div>
