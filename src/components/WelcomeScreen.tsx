@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Screen } from '../App';
 import './WelcomeScreen.css';
-
+import './AuthScreen.css';
 interface WelcomeScreenProps {
   onNavigate: (screen: Screen) => void;
 }
@@ -11,8 +11,8 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onNavigate }) => {
     <div className="welcome-screen">
       <div className="welcome-container">
         <div className="game-logo">
-         <h1 className="game-title">
-            <span className="serpent-icon"></span>
+         <h1 className="titlegame-">
+            <span className="serpent-icon">🐍</span>
             SERPENTIA
           </h1>
           <p className="game-subtitle">El juego de la serpiente definitivo</p>
@@ -21,8 +21,8 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onNavigate }) => {
         <div className="welcome-content">
           <div className="game-description">
             <p>
-              Sumérgete en la experiencia clásica de la serpiente con gráficos modernos,
-              power-ups únicos y desafíos emocionantes. ¡Compite por el mejor puntaje!
+             Sumérgete en la experiencia clásica de la serpiente con power-ups únicos y desafíos emocionantes.
+            ¡Compite o únete con tu equipo para lograr el objetivo!
             </p>
           </div>
 

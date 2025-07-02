@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { Client } from '@stomp/stompjs';
 // @ts-ignore
 import SockJS from 'sockjs-client';
@@ -13,17 +12,15 @@ interface TokenPayload {
 
 export const getCurrentUsername = (): string => {
   const token = localStorage.getItem('authToken');
-  console.log('Token encontrado:', token ? 'Sí' : 'No');
-
+ 
   if (!token) {
-    console.log('No hay token en localStorage');
+   
     return '';
   }
 
   try {
     const decoded = jwtDecode<TokenPayload>(token);
-    console.log('Token decodificado:', decoded);
-    console.log('Username extraído:', decoded.sub);
+   
     return decoded.sub || '';
   } catch (error) {
     console.error('Error decodificando token:', error);
@@ -31,8 +28,8 @@ export const getCurrentUsername = (): string => {
   }
 };
 
-const API_URL = 'http://localhost:8080';
-const WS_URL = `${API_URL}/ws`; // base sin token
+
+const WS_URL = import.meta.env.VITE_WS_URL; 
 
 class LobbyService {
   rooms: Room[] = [];
@@ -41,7 +38,7 @@ class LobbyService {
   connected: boolean = false;
 
   constructor() {
-    // WebSocket se activa manualmente
+   
   }
 
   connectWebSocket() {

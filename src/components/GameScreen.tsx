@@ -11,37 +11,21 @@ const GameScreen: React.FC<GameScreenProps> = ({ user, onLogout }) => {
   const gameContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Aquí inicializarías Phaser cuando el componente se monte
+    
     const initGame = async () => {
       if (gameContainerRef.current) {
-        // Placeholder para la inicialización de Phaser
+       
         console.log('Inicializando juego Phaser...');
         
-        // Ejemplo de configuración básica de Phaser (comentado para evitar errores)
-        /*
-        const config = {
-          type: Phaser.AUTO,
-          width: 800,
-          height: 600,
-          parent: gameContainerRef.current,
-          backgroundColor: '#2c3e50',
-          scene: {
-            preload: preload,
-            create: create,
-            update: update
-          }
-        };
-        
-        const game = new Phaser.Game(config);
-        */
+    
       }
     };
 
     initGame();
 
-    // Cleanup cuando el componente se desmonte
+   
     return () => {
-      console.log('Limpiando juego...');
+      
     };
   }, []);
 

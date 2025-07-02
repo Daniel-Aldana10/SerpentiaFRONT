@@ -24,11 +24,9 @@ const CreateRoomForm: React.FC<Props> = ({ onCreate }) => {
       targetScore: 100,
       powerups,
     };
-    console.log(mode);
-    console.log('Sala creada:', newRoom);
+  
     onCreate(newRoom);
     setName(''); setMode("COMPETITIVE"); setMaxPlayers(2); setPowerups(false);
-    // alert(`¡Sala "${newRoom.name}" creada exitosamente!\nID: ${newRoom.id}`);
   };
 
   return (

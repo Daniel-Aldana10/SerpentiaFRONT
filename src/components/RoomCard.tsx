@@ -1,6 +1,5 @@
 import React from 'react';
 import type { Room, GameMode } from '../types/types';
-import './RoomList.css';
 import './RoomScreen.css';
 import { gameModeLabels }from '../types/types';
 interface Props {
