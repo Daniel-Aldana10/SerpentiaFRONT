@@ -30,6 +30,14 @@ const WaitingRoomScreen: React.FC<WaitingRoomProps> = ({ room, onLeave }) => {
     };
   }, [room.roomId]);
 
+  // Log para depuración
+  console.log('currentRoom:', currentRoom);
+  console.log('username actual:', username);
+
+  const handleStartGame = () => {
+    console.log("proximo a implementar");
+  };
+
   return (
     <div className="waiting-room">
       <h2>Sala: {currentRoom.roomId}</h2>
@@ -42,7 +50,15 @@ const WaitingRoomScreen: React.FC<WaitingRoomProps> = ({ room, onLeave }) => {
         ))}
       </ul>
       <button onClick={onLeave} className="leave-btn">❌ Salir</button>
-      {isHost && <button className="start-btn" disabled>Iniciar partida</button>}
+      {isHost && (
+        <button
+          className="start-btn"
+          disabled={currentRoom.currentPlayers.length < currentRoom.maxPlayers}
+          onClick={handleStartGame}
+        >
+          Iniciar partida
+        </button>
+      )}
       <p>Esperando a que se unan más jugadores...</p>
     </div>
   );

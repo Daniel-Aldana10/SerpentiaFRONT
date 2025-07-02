@@ -24,7 +24,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onNavigate, onLogin }) 
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     
-    // Limpiar error específico al escribir
+    
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
@@ -61,10 +61,10 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onNavigate, onLogin }) 
     setIsLoading(true);
 
     try {
-      // Llamada real a la API
+      
       const { username, email, password } = formData;
       const response = await registerUser({ username, email, password });
-      // Mostrar mensaje de éxito y navegar a login
+      
       setSuccess('Usuario registrado exitosamente. Ahora puedes iniciar sesión.');
       setTimeout(() => onNavigate('login'), 1500);
     } catch (err: any) {
