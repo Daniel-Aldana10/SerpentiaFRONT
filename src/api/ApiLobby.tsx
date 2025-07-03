@@ -161,6 +161,14 @@ class LobbyService {
       this.stompClient = null;
     }
   }
+
+  async startGame(roomId: string) {
+    try {
+      await axiosInstance.post(`/game/start/${roomId}`);
+    } catch (error: any) {
+      console.error('Error uniendose de la sala:', error);
+    }
+  }
 }
 
 const lobbyService = new LobbyService();
