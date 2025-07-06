@@ -41,3 +41,25 @@ export interface RoomEvent {
   room: Room;
   timestamp?: number;
 }
+
+export interface Point {
+  x: number;
+  y: number;
+}
+
+export interface BoardState {
+  roomId: string;
+  width: number;
+  height: number;
+  snakePositions: Record<string, Point[]>;
+  snakeDirections: Record<string, string>;
+  fruits: Point[];
+  status: string;
+}
+
+export interface GameEvent {
+  type: 'START' | 'UPDATE' | 'FRUIT' | 'COLLISION' | 'END';
+  player: string | null;
+  board: BoardState;
+  message?: string;
+}

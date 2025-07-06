@@ -11,9 +11,10 @@ import { useUser } from '../context/UserContext';
 
 interface RoomScreenProps {
   onBack?: () => void;
+  onNavigate: (screen: string, params?: any) => void;
 }
 
-const RoomScreen: React.FC<RoomScreenProps> = ({ onBack }) => {
+const RoomScreen: React.FC<RoomScreenProps> = ({ onBack, onNavigate }) => {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [waitingRoom, setWaitingRoom] = useState<Room | null>(null);
   const { username } = useUser();
@@ -63,6 +64,7 @@ const RoomScreen: React.FC<RoomScreenProps> = ({ onBack }) => {
       <WaitingRoomScreen
         room={waitingRoom}
         onLeave={handleLeaveRoom}
+        onNavigate={onNavigate}
       />
     );
   }

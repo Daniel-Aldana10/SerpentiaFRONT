@@ -8,36 +8,48 @@ import './App.css';
 import type { User, Room } from './types/types';
 export type Screen = 'welcome' | 'login' | 'register' | 'game' | 'rooms';
 
-
-
 function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('welcome');
   const [user, setUser] = useState<User | null>(null);
-  const [rooms, setRooms] = useState<Room[]>([]);
+  const [currentRoom, setCurrentRoom] = useState<Room | null>(null);
+
+  // Navegación centralizada
+  const handleNavigate = (screen: Screen, params?: any) => {
+    setCurrentScreen(screen);
+    if (params?.room) setCurrentRoom(params.room);
+  };
 
   const handleLogin = (token: string) => {
     setCurrentScreen('rooms');
+    // Aquí podrías setear el usuario si lo obtienes del token
   };
 
   const handleLogout = () => {
     setUser(null);
     setCurrentScreen('welcome');
+    setCurrentRoom(null);
   };
 
   const renderScreen = () => {
     switch (currentScreen) {
       case 'welcome':
-        return <WelcomeScreen onNavigate={setCurrentScreen} />;
+        return <WelcomeScreen onNavigate={handleNavigate} />;
       case 'login':
-        return <LoginScreen onNavigate={setCurrentScreen} onLogin={handleLogin} />;
+        return <LoginScreen onNavigate={handleNavigate} onLogin={handleLogin} />;
       case 'register':
-        return <RegisterScreen onNavigate={setCurrentScreen} onLogin={handleLogin} />;
+        return <RegisterScreen onNavigate={handleNavigate} onLogin={handleLogin} />;
       case 'rooms':
-        return <RoomScreen onBack={() => setCurrentScreen('welcome')} username={user?.username} />;
+        return <RoomScreen onBack={() => setCurrentScreen('welcome')} onNavigate={handleNavigate} />;
       case 'game':
-        return <GameScreen user={user} onLogout={handleLogout} />;
+        return (
+          <GameScreen
+            user={user}
+            room={currentRoom!}
+            onLogout={handleLogout}
+          />
+        );
       default:
-        return <WelcomeScreen onNavigate={setCurrentScreen} />;
+        return <WelcomeScreen onNavigate={handleNavigate} />;
     }
   };
 
