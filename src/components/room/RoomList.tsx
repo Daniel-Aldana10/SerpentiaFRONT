@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Room } from '../types/types';
+import type { Room } from '../../types/types';
 import RoomCard from './RoomCard';
 
 

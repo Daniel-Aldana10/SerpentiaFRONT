@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import CreateRoomForm from './CreateRoomForm';
 import RoomList from './RoomList';
-import type { Room, CreateRoomForms} from '../types/types';
-import './AuthScreen.css';
+import type { Room, CreateRoomForms} from '../../types/types';
+import '../AuthScreen.css';
 
 import './RoomScreen.css';
-import lobbyWebSocketService, { getCurrentUsername } from '../api/ApiLobby';
+import lobbyWebSocketService, { getCurrentUsername } from '../../api/ApiLobby';
 import WaitingRoomScreen from './WaitingRoomScreen';
-import { useUser } from '../context/UserContext';
+import { useUser } from '../../context/UserContext';
 
 interface RoomScreenProps {
   onBack?: () => void;
@@ -42,6 +42,7 @@ const RoomScreen: React.FC<RoomScreenProps> = ({ onBack, onNavigate }) => {
 
   const handleJoinRoom = async (roomId: string) => {
     const username = getCurrentUsername();
+    console.log(username);
     if (!username) {
       alert('Debes iniciar sesión para unirte a una sala.');
       return;

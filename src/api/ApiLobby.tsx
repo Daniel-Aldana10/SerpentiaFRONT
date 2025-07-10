@@ -80,8 +80,9 @@ class LobbyService {
           case 'DELETED':
             this.rooms = this.rooms.filter(room => room.roomId !== event.room.roomId);
             break;
-          case 'JOINED':
-          case 'LEFT':
+          case 'CLEARED':
+            this.rooms = [];
+            break;
           case 'UPDATED':
             this.rooms = this.rooms.map(room =>
               room.roomId === event.room.roomId ? event.room : room

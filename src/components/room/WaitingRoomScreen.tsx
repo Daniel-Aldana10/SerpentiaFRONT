@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import type { Room } from '../types/types';
+import type { Room } from '../../types/types';
 import './WaitingRoomScreen.css';
-import { useUser } from '../context/UserContext';
-import lobbyWebSocketService from '../api/ApiLobby';
+import { useUser } from '../../context/UserContext';
+import lobbyWebSocketService from '../../api/ApiLobby';
 import { Client } from '@stomp/stompjs';
 // @ts-ignore
 import SockJS from 'sockjs-client';
@@ -53,13 +53,8 @@ const WaitingRoomScreen: React.FC<WaitingRoomProps> = ({ room, onLeave, onNaviga
             
             if (event.type === 'START') {
               console.log('Iniciando juego con board:', event.board);
-              // Limpiar suscripciones y conexiones
-              //client.deactivate();
-              //unsubscribe();
-              lobbyWebSocketService.disconnect();
-              
-              // Navegar al juego
-              onNavigate('game', { room: currentRoom, board: event.board });
+              // NO desconectes aquí, solo navega al juego
+              onNavigate('game', { room: currentRoom, board: event.board, user: { username } });
             }
           } catch (error) {
             console.error('Error al procesar evento de juego:', error);

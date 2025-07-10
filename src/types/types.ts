@@ -37,29 +37,44 @@ export const gameModeLabels: Record<GameMode, string> = {
 };
 
 export interface RoomEvent {
-  type: 'CREATED' | 'UPDATED' | 'DELETED' | 'JOINED' | 'LEFT';
+  type: 'CREATED' | 'UPDATED' | 'DELETED' | 'CLEARED';
   room: Room;
   timestamp?: number;
 }
-
-export interface Point {
+export interface Position {
   x: number;
   y: number;
 }
 
-export interface BoardState {
-  roomId: string;
-  width: number;
-  height: number;
-  snakePositions: Record<string, Point[]>;
-  snakeDirections: Record<string, string>;
-  fruits: Point[];
-  status: string;
+export interface Player {
+  id: string;
+  name: string;
+  color: string;
+  snake: Position[];
+  direction: Direction;
+  score: number;
+  alive: boolean;
 }
 
-export interface GameEvent {
-  type: 'START' | 'UPDATE' | 'FRUIT' | 'COLLISION' | 'END';
-  player: string | null;
-  board: BoardState;
-  message?: string;
+export interface GameState {
+  roomId: string;
+  players: Map<string, Player>;
+  food: Position[];
+  gridSize: number;
+  gameWidth: number;
+  gameHeight: number;
+  gameStatus: 'WAITING' | 'IN_GAME' | 'ENDED';
+}
+
+export enum Direction {
+  UP = 'UP',
+  DOWN = 'DOWN',
+  LEFT = 'LEFT',
+  RIGHT = 'RIGHT'
+}
+
+export interface GameInput {
+  playerId: string;
+  direction: Direction;
+  timestamp: number;
 }

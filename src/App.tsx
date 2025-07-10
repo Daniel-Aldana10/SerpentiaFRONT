@@ -2,8 +2,8 @@ import { useState } from 'react';
 import WelcomeScreen from './components/WelcomeScreen';
 import LoginScreen from './components/LoginScreen';
 import RegisterScreen from './components/RegisterScreen';
-import GameScreen from './components/GameScreen';
-import RoomScreen from './components/RoomScreen';
+import GameScreen from './components/game/GameScreen';
+import RoomScreen from './components/room/RoomScreen';
 import './App.css';
 import type { User, Room } from './types/types';
 export type Screen = 'welcome' | 'login' | 'register' | 'game' | 'rooms';
@@ -12,11 +12,14 @@ function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('welcome');
   const [user, setUser] = useState<User | null>(null);
   const [currentRoom, setCurrentRoom] = useState<Room | null>(null);
+  const [currentBoard, setCurrentBoard] = useState<any>(null);
 
   // Navegación centralizada
-  const handleNavigate = (screen: Screen, params?: any) => {
-    setCurrentScreen(screen);
+  const handleNavigate = (screen: string, params?: any) => {
+    setCurrentScreen(screen as Screen);
     if (params?.room) setCurrentRoom(params.room);
+    if (params?.board) setCurrentBoard(params.board);
+    if (params?.user) setUser(params.user);
   };
 
   const handleLogin = (token: string) => {
@@ -45,7 +48,8 @@ function App() {
           <GameScreen
             user={user}
             room={currentRoom!}
-            onLogout={handleLogout}
+            board={currentBoard}
+            onNavigate={handleNavigate}
           />
         );
       default:
