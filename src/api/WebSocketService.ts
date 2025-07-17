@@ -100,7 +100,7 @@ class WebSocketService {
           const event = JSON.parse(msg.body);
           this.gameListeners[roomId].forEach(l => l(event));
         });
-        console.log("hpta se conecto");
+        
       }
     };
 
