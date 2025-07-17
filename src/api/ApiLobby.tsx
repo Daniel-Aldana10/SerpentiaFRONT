@@ -80,8 +80,9 @@ class LobbyService {
           case 'DELETED':
             this.rooms = this.rooms.filter(room => room.roomId !== event.room.roomId);
             break;
-          case 'JOINED':
-          case 'LEFT':
+          case 'CLEARED':
+            this.rooms = [];
+            break;
           case 'UPDATED':
             this.rooms = this.rooms.map(room =>
               room.roomId === event.room.roomId ? event.room : room
@@ -114,13 +115,16 @@ class LobbyService {
     };
   }
 
-  async fetchRooms() {
+  // En ApiLobby.tsx
+  async fetchRooms(): Promise<Room[]> {
     try {
       const response = await axiosInstance.get('/lobby/rooms');
+      console.log('[API] fetchRooms response:', response.data);
       this.rooms = response.data;
-      this.listeners.forEach(listener => listener(this.rooms));
+      return this.rooms;
     } catch (error: any) {
       console.error('Error obteniendo salas:', error);
+      return [];
     }
   }
 

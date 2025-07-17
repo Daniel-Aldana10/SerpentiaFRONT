@@ -1,7 +1,8 @@
 import React from 'react';
-import type { Room, GameMode } from '../types/types';
+import type { Room, GameMode } from '../../types/types';
 import './RoomScreen.css';
-import { gameModeLabels }from '../types/types';
+import { gameModeLabels } from '../../types/types';
+
 interface Props {
   room: Room;
   onJoin: (id: string) => void;
@@ -11,7 +12,7 @@ const RoomCard: React.FC<Props> = ({ room, onJoin }) => (
   
   <div className="room-card" onClick={() => onJoin(room.roomId)}>
     <div className="room-header">
-      <div className="room-id">{"room"+room.roomId}</div>
+      <div className="room-id">{room.roomId}</div>
       <div className="room-status">{"Esperando"}</div>
     </div>
     <h3 style={{ marginBottom: 10, color: '#fff' }}>{room.host}</h3>
