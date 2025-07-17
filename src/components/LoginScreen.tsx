@@ -9,6 +9,7 @@ interface LoginScreenProps {
 }
 
 const LoginScreen: React.FC<LoginScreenProps> = ({ onNavigate, onLogin }) => {
+  console.log('LoginScreen renderizado');
   const { refreshUsername } = useUser();
   const [formData, setFormData] = useState({
     username: '',
@@ -25,6 +26,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onNavigate, onLogin }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Submit ejecutado');
     setIsLoading(true);
     setError('');
 
@@ -33,11 +35,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onNavigate, onLogin }) => {
       if (username.length < 3 || username.length > 15) {
         throw new Error('El nombre de usuario debe tener entre 3 y 15 caracteres.');
       }
-      
+      console.log('Llamando a loginUser');
       const token = await loginUser({ username, password });
+      console.log('Respuesta de loginUser:', token);
       refreshUsername();
+      onNavigate('rooms');
       onLogin && onLogin(token);
     } catch (err: any) {
+      console.log('Error en login:', err);
       if (err.response && err.response.data) {
         setError(err.response.data.message || '');
       } else if (err.message) {
