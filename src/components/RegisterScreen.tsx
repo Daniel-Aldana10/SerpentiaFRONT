@@ -19,6 +19,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onNavigate, onLogin }) 
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [success, setSuccess] = useState<string | null>(null);
+  const [mensajeEspecial, setMensajeEspecial] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -59,6 +60,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onNavigate, onLogin }) 
     if (!validateForm()) return;
 
     setIsLoading(true);
+    setMensajeEspecial('');
 
     try {
       
@@ -68,12 +70,15 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onNavigate, onLogin }) 
       setSuccess('Usuario registrado exitosamente. Ahora puedes iniciar sesión.');
       setTimeout(() => onNavigate('login'), 1500);
     } catch (err: any) {
-      if (err.response && err.response.data && err.response.data.message) {
+      if (err.response && err.response.data) {
         setErrors({ general: err.response.data.message });
+        setMensajeEspecial(err.response.data.mensajeEspecial || '');
       } else if (err.message) {
         setErrors({ general: err.message });
+        setMensajeEspecial('');
       } else {
         setErrors({ general: 'Error al crear la cuenta. Intenta nuevamente.' });
+        setMensajeEspecial('');
       }
     } finally {
       setIsLoading(false);
@@ -158,6 +163,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onNavigate, onLogin }) 
           </div>
 
           {errors.general && <div className="error-message">{errors.general}</div>}
+        
 
           <button 
             type="submit" 

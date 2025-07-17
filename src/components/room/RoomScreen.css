@@ -23,6 +23,12 @@ body {
     filter: drop-shadow(0 0 8px rgba(39, 174, 96, 0.5));
   
 }
+.profile-btn-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+  }
 .header h1 { 
     font-size: 3em; 
     margin-bottom: 10px; 

@@ -17,34 +17,39 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onNavigate, onLogin }) => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [mensajeEspecial, setMensajeEspecial] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    setError(''); // Limpiar error al escribir
+    setError('');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
+    setMensajeEspecial('');
 
     try {
       const { username, password } = formData;
       if (username.length < 3 || username.length > 15) {
         throw new Error('El nombre de usuario debe tener entre 3 y 15 caracteres.');
       }
-      // Llamada real a la API
+      
       const token = await loginUser({ username, password });
       refreshUsername();
       onLogin(token);
     } catch (err: any) {
-      if (err.response && err.response.data && err.response.data.message) {
-        setError(err.response.data.message);
+      if (err.response && err.response.data) {
+        setError(err.response.data.message || '');
+        setMensajeEspecial(err.response.data.mensajeEspecial || '');
       } else if (err.message) {
         setError(err.message);
+        setMensajeEspecial('');
       } else {
         setError('Error al iniciar sesión');
+        setMensajeEspecial('');
       }
     } finally {
       setIsLoading(false);
@@ -98,6 +103,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onNavigate, onLogin }) => {
           </div>
 
           {error && <div className="error-message">{error}</div>}
+          
 
           <button 
             type="submit" 
@@ -121,7 +127,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onNavigate, onLogin }) => {
           </div>
 
           <div className="demo-info">
-            <p><strong>Demo:</strong> demo@serpentia.com / demo123</p>
+            <p><strong>Demo:</strong> aldanadaniel535@gmail.com </p>
           </div>
         </form>
         {/* ✅ CERRAR FORMULARIO */}
