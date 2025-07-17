@@ -1,69 +1,76 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import CreateRoomForm from './CreateRoomForm';
 import RoomList from './RoomList';
-import type { Room, CreateRoomForms} from '../../types/types';
+import type { Room, CreateRoomForms } from '../../types/types';
 import '../AuthScreen.css';
-
 import './RoomScreen.css';
-import lobbyWebSocketService, { getCurrentUsername } from '../../api/ApiLobby';
+import webSocketService from '../../api/WebSocketService';
+import lobbyService, { getCurrentUsername } from '../../api/ApiLobby';
 import WaitingRoomScreen from './WaitingRoomScreen';
 import { useUser } from '../../context/UserContext';
 
 interface RoomScreenProps {
   onBack?: () => void;
   onNavigate: (screen: string, params?: any) => void;
+  rooms: Room[];
+  setRooms: React.Dispatch<React.SetStateAction<Room[]>>;
+  onProfileClick?: () => void;
 }
 
-const RoomScreen: React.FC<RoomScreenProps> = ({ onBack, onNavigate }) => {
-  const [rooms, setRooms] = useState<Room[]>([]);
-  const [waitingRoom, setWaitingRoom] = useState<Room | null>(null);
+const RoomScreen: React.FC<RoomScreenProps> = ({ onBack, onNavigate, rooms, setRooms, onProfileClick }) => {
+  const [waitingRoom, setWaitingRoom] = React.useState<Room | null>(null);
   const { username } = useUser();
 
   useEffect(() => {
-
-    lobbyWebSocketService.connectWebSocket();
-    const unsubscribe = lobbyWebSocketService.addRoomsListener((rooms) => {
-      setRooms(rooms);
+    webSocketService.connect();
+    webSocketService.addLobbyListener(setRooms);
+    lobbyService.fetchRooms().then((rooms) => {
+      if (rooms && rooms.length > 0) setRooms(rooms);
     });
-    lobbyWebSocketService.fetchRooms();
-    return () => {
-      unsubscribe();
-      lobbyWebSocketService.disconnect();
-    };
-  }, [username]);
+  }, [username, setRooms]);
 
   const handleCreateRoom = async (room: CreateRoomForms) => {
-
-    const createdRoom = await lobbyWebSocketService.createRoom(room);
-    
-    const updatedRoom = rooms.find(r => r.roomId === room.roomId) || createdRoom;
-    setWaitingRoom(updatedRoom);
+    try {
+      const createdRoom = await lobbyService.createRoom(room);
+      setWaitingRoom(createdRoom);
+    } catch (error) {
+      console.error('Error creando sala:', error);
+    }
   };
 
   const handleJoinRoom = async (roomId: string) => {
     const username = getCurrentUsername();
-    console.log(username);
+    console.log('[JOIN ROOM] username:', username);
     if (!username) {
       alert('Debes iniciar sesión para unirte a una sala.');
       return;
     }
-    const joinedRoom = await lobbyWebSocketService.joinRoom(roomId);
-
-    const updatedRoom = rooms.find(r => r.roomId === roomId) || joinedRoom;
-    setWaitingRoom(updatedRoom);
+    try {
+      const joinedRoom = await lobbyService.joinRoom(roomId);
+      const updatedRoom = rooms.find(r => r.roomId === roomId) || joinedRoom;
+      setWaitingRoom(updatedRoom);
+      console.log('[JOIN ROOM] updatedRoom:', updatedRoom);
+    } catch (error) {
+      console.error('Error uniéndose a sala:', error);
+    }
   };
 
- const handleLeaveRoom = async () => {
-  if (!waitingRoom) return;
-  await lobbyWebSocketService.leaveRoom(waitingRoom.roomId);
-  setWaitingRoom(null);
-  await lobbyWebSocketService.fetchRooms(); 
-};
+  const handleLeaveRoom = async () => {
+    if (!waitingRoom) return;
+    try {
+      await lobbyService.leaveRoom(waitingRoom.roomId);
+      setWaitingRoom(null);
+    } catch (error) {
+      console.error('Error saliendo de la sala:', error);
+    }
+  };
 
   if (waitingRoom) {
+    console.log('[RENDER] WaitingRoomScreen con:', waitingRoom);
     return (
       <WaitingRoomScreen
         room={waitingRoom}
+        rooms={rooms}
         onLeave={handleLeaveRoom}
         onNavigate={onNavigate}
       />
@@ -73,6 +80,14 @@ const RoomScreen: React.FC<RoomScreenProps> = ({ onBack, onNavigate }) => {
   return (
     <div className="container">
       <button className="back-btn" onClick={onBack || (() => window.history.back())}>← Volver</button>
+      
+      {onProfileClick && (
+    <div className="profile-btn-container">
+      <button className="btn btn-primary full-width" onClick={onProfileClick}>
+        Perfil
+      </button>
+    </div>
+    )}  
       <div className="header">
         <h1> SERPENTIA</h1>
         <p>Crear y Unirse a Salas de Juego</p>

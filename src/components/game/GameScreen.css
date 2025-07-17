@@ -1,22 +1,26 @@
+/* Game Screen Styles */
 .game-screen {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--bg-primary);
+  height: 100vh;
+  background: linear-gradient(135deg, #181818 0%, #232526 100%);
 }
 
 .game-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
-  border-bottom: 2px solid #333;
-  background: #1a1a1a;
+  padding: 1rem 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.game-header h1, .game-header .game-logo {
+.game-logo {
+  color: white;
+  font-size: 2rem;
   margin: 0;
-  color: #4CAF50;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .game-info {
@@ -59,14 +63,9 @@
 }
 
 .game-container {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  position: relative;
-  border: 2px solid #ffffff;
-  border-radius: 8px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   overflow: hidden;
 }
 
@@ -120,37 +119,28 @@
 }
 
 .game-instructions {
-  text-align: left;
-  margin: 1.5rem 0;
+  background: rgba(255, 255, 255, 0.9);
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: var(--border-radius);
+  border-radius: 8px;
+  border-left: 4px solid #2196F3;
 }
 
 .game-instructions h4 {
-  color: var(--text-primary);
-  margin-bottom: 0.5rem;
-  font-size: var(--font-size-base);
+  margin: 0 0 0.5rem 0;
+  color: #333;
 }
 
 .game-instructions p {
-  color: var(--text-secondary);
-  font-size: var(--font-size-sm);
-  margin: 0.25rem 0;
+  margin: 0.3rem 0;
+  color: #666;
+  font-size: 0.9rem;
 }
 
 .game-sidebar {
-  position: fixed;
-  right: 2rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 250px;
+  width: 300px;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  background: #1a1a1a;
-  border-radius: 8px;
-  padding: 1rem;
+  gap: 1rem;
 }
 
 .stats-panel,
@@ -267,10 +257,11 @@
 
 @media (max-width: 768px) {
   .game-header {
-    padding: 1rem;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: flex-start;
+    padding: 0.5rem 1rem;
+  }
+
+  .game-logo {
+    font-size: 1.5rem;
   }
 
   .game-info {
@@ -327,7 +318,10 @@
 }
 
 .connection-status {
-  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .game-content {
@@ -345,9 +339,11 @@
 }
 
 .ui-panel {
-  background: #2a2a2a;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
   padding: 1rem;
-  border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .ui-panel h3 {
@@ -356,17 +352,100 @@
 }
 
 .leaderboard ol {
-  margin: 0;
-  padding: 0;
   list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .leaderboard-item {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #333;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 6px;
+  border-left: 3px solid #4CAF50;
+  transition: all 0.2s ease;
+}
+
+.leaderboard-item.current-player {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  transform: scale(1.02);
+}
+
+.player-rank {
+  font-weight: bold;
+  margin-right: 0.5rem;
+  min-width: 30px;
+}
+
+.player-name {
+  flex: 1;
+  font-weight: 500;
+}
+
+.player-score {
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.player-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.player-status-indicator {
+  font-size: 1.2rem;
+}
+
+.game-status {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #4CAF50;
+}
+
+.game-status h4 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+}
+
+.status-indicator {
+  font-weight: bold;
+  padding: 0.5rem;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.status-indicator.waiting {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-indicator.in_game {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-indicator.finished {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.leaderboard {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.leaderboard h3 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  text-align: center;
 }
 
 .leaderboard-item:last-child {
@@ -381,18 +460,17 @@
 }
 
 .controls-help {
-  margin-top: auto;
+  font-size: 0.9rem;
 }
 
 .controls-help h4 {
-  margin: 0 0 0.5rem 0;
-  color: #4CAF50;
+  margin-top: 0;
+  color: #333;
 }
 
 .controls-help p {
-  margin: 0;
-  font-size: 0.8rem;
-  color: #ccc;
+  margin: 0.5rem 0;
+  color: #666;
 }
 
 .status-indicator {
@@ -406,3 +484,123 @@
 .status-alive { background: #4CAF50; }
 .status-dead { background: #f44336; }
 .status-waiting { background: #ff9800; }
+
+/* Score Notifications */
+.score-notifications {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.score-notification {
+  background: linear-gradient(45deg, #4CAF50, #45a049);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px;
+  animation: slideInRight 0.5s ease-out;
+  font-weight: bold;
+  text-align: center;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Serpentia Game Styles */
+.serpentia-game {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.serpentia-game .game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+}
+
+.serpentia-game .game-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #4CAF50;
+}
+
+.serpentia-game .game-content {
+  display: flex;
+  height: calc(100vh - 80px);
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.serpentia-game .game-sidebar {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Fondo principal oscuro para la pantalla de juego */
+.game-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: linear-gradient(135deg, #181818 0%, #232526 100%);
+}
+
+/* Paneles oscuros translúcidos */
+.game-sidebar, .ui-panel, .game-status, .leaderboard {
+  background: rgba(30, 30, 30, 0.85) !important;
+  color: #fff !important;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Textos claros */
+.game-status h4, .leaderboard h3, .player-info h3, .controls-help h4 {
+  color: #fff !important;
+}
+
+/* Ajuste de color para los items del leaderboard */
+.leaderboard-item {
+  background: rgba(40, 40, 40, 0.85) !important;
+  color: #fff !important;
+  border-left: 3px solid #4CAF50;
+}
+
+.leaderboard-item.current-player {
+  background: linear-gradient(135deg, #232526, #4CAF50) !important;
+  color: #fff !important;
+}
+
+/* Ajuste de color para los paneles de ayuda */
+.controls-help {
+  background: rgba(30, 30, 30, 0.85) !important;
+  color: #eee !important;
+}
+
+/* Ajuste de color para el header */
+.game-header {
+  background: rgba(24, 24, 24, 0.95) !important;
+  color: #fff !important;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Ajuste de color para el logo */
+.game-logo {
+  color: #4CAF50 !important;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+}

@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import type { GameState, Player, Position, GameInput } from '../../types/types';
+import type { GameState, Player, Position, GameInput, ScoreEvent } from '../../types/types';
 import { Direction } from '../../types/types';
 import gameService from '../../api/ApiGame';
 import { getCurrentUsername } from '../../api/ApiLobby';
@@ -26,17 +26,17 @@ export class GameManager {
   private moveDelay: number = 150; // Delay mínimo entre movimientos (ms)
   private lastDirection: Direction | null = null;
   
-  constructor(scene: Phaser.Scene, localPlayerId: string) {
+  constructor(scene: Phaser.Scene) {
     this.scene = scene;
-    this.localPlayerId = localPlayerId;
+    this.localPlayerId = getCurrentUsername();
+    
     this.gameState = {
-      players: new Map(),
-      food: [],
-      gridSize: 20,
-      gameWidth: 800,
-      gameHeight: 600,
-      gameStatus: 'WAITING',
-      roomId: ''
+      roomId: '',
+      width: 40,
+      height: 30,
+      players: [],
+      fruits: [],
+      status: 'WAITING'
     };
     this.setupInputHandlers();
   }
@@ -61,14 +61,11 @@ export class GameManager {
   
   private handleInput(): void {
     // Solo procesar input si el juego está activo y el jugador está vivo
-    console.log(this.gameState.gameStatus);
-    if (this.gameState.gameStatus != 'IN_GAME') {
-      //console.log('[FRONT] Juego no está en estado IN_GAME:', this.gameState.gameStatus);
+    if (this.gameState.status !== 'IN_GAME') {
       return;
     }
     
     if (!this.isLocalPlayerAlive()) {
-      //console.log('[FRONT] Jugador local no está vivo');
       return;
     }
     
@@ -108,68 +105,42 @@ export class GameManager {
     
     // Procesar el movimiento si se detectó una dirección válida
     if (newDirection) {
-      //console.log('[FRONT] Input detectado:', newDirection);
       if (this.isValidMove(newDirection)) {
-        //console.log('[FRONT] Enviando movimiento válido:', newDirection);
         this.sendMove(newDirection);
         this.lastMoveTime = currentTime;
         this.lastDirection = newDirection;
-      } else {
-        //console.log('[FRONT] Movimiento inválido:', newDirection);
       }
     }
   }
   
   private isLocalPlayerAlive(): boolean {
-    //console.log('[FRONT] === isLocalPlayerAlive DEBUG ===');
-    //console.log('[FRONT] localPlayerId:', this.localPlayerId);
-    //console.log('[FRONT] players count:', this.gameState.players.size);
-    //console.log('[FRONT] players keys:', Array.from(this.gameState.players.keys()));
+    const localPlayer = this.getLocalPlayer();
     
-    const localPlayer = this.gameState.players.get(this.localPlayerId);
-    //console.log('[FRONT] localPlayer encontrado:', !!localPlayer);
-    
-    if (localPlayer) {
-      //console.log('[FRONT] localPlayer.alive:', localPlayer.alive);
-      //console.log('[FRONT] localPlayer.id:', localPlayer.id);
-      //console.log('[FRONT] localPlayer.name:', localPlayer.name);
-    }
-    
-    const result = localPlayer ? localPlayer.alive : false;
-    //console.log('[FRONT] isLocalPlayerAlive result:', result);
-    //console.log('[FRONT] ==============================');
-    
-    return result;
+    return localPlayer !== undefined && localPlayer.alive;
   }
   
   private isValidMove(direction: Direction): boolean {
-    const localPlayer = this.gameState.players.get(this.localPlayerId);
+    const localPlayer = this.getLocalPlayer();
     if (!localPlayer) {
-      //console.log('[FRONT] No se encontró jugador local:', this.localPlayerId);
       return false;
     }
     
     // No permitir movimiento si el jugador no está vivo
     if (!localPlayer.alive) {
-      //console.log('[FRONT] Jugador no está vivo');
       return false;
     }
     
-    // No permitir movimiento en la dirección opuesta (esto causaría que la serpiente se choque consigo misma)
+    // No permitir movimiento en la dirección opuesta
     if (this.isOppositeDirection(direction, localPlayer.direction)) {
-      //console.log('[FRONT] Movimiento en dirección opuesta bloqueado:', direction, 'vs', localPlayer.direction);
       return false;
     }
     
     // Permitir el mismo movimiento si ha pasado suficiente tiempo
-    // Esto es más flexible que bloquear completamente el mismo movimiento
     const currentTime = Date.now();
     if (direction === this.lastDirection && (currentTime - this.lastMoveTime) < this.moveDelay) {
-      //console.log('[FRONT] Movimiento repetido muy rápido:', direction);
       return false;
     }
     
-    //console.log('[FRONT] Movimiento válido:', direction);
     return true;
   }
   
@@ -185,26 +156,16 @@ export class GameManager {
   }
   
   private sendMove(direction: Direction): void {
-    //console.log('[FRONT] sendMove llamado con dirección:', direction);
-    //console.log('[FRONT] roomId actual:', this.roomId);
-    //console.log('[FRONT] localPlayerId:', this.localPlayerId);
-    
     if (!this.roomId) {
-      //console.error('[FRONT] No hay roomId configurado para enviar movimiento');
       return;
     }
     
-    //console.log(`[FRONT] Enviando movimiento: ${direction} para jugador: ${this.localPlayerId}`);
-    
-    // Convertir Direction enum a string para el backend
     const directionString = this.directionToString(direction);
-    //console.log('[FRONT] Dirección convertida a string:', directionString);
     
     try {
       gameService.sendMove(this.roomId, this.localPlayerId, directionString);
-      //console.log('[FRONT] sendMove enviado exitosamente');
     } catch (error) {
-      //console.error('[FRONT] Error al enviar movimiento:', error);
+      console.error('[FRONT] Error al enviar movimiento:', error);
     }
   }
   
@@ -225,64 +186,41 @@ export class GameManager {
   
   // Función para convertir coordenadas de grilla a píxeles
   private gridToPixel(gridPos: Position): Position {
+    const gridSize = this.gameState.gridSize || 20;
     return {
-      x: gridPos.x * this.gameState.gridSize,
-      y: gridPos.y * this.gameState.gridSize
+      x: gridPos.x * gridSize,
+      y: gridPos.y * gridSize
     };
   }
   
   // Método para actualizar localPlayerId basándose en los datos del servidor
   private updateLocalPlayerId(serverGameState: GameState): void {
     // Si no hay localPlayerId o no se encuentra en los jugadores del servidor
-    if (!this.localPlayerId || !serverGameState.players.has(this.localPlayerId)) {
-      //console.log('[FRONT] localPlayerId no encontrado en servidor, buscando coincidencia...');
-      
+    if (!this.localPlayerId || !Array.isArray(serverGameState.players) || !serverGameState.players.find(p => p.name === this.localPlayerId || p.id === this.localPlayerId)) {
       // Buscar un jugador que coincida por nombre (fallback)
-      for (const [playerId, player] of serverGameState.players) {
-        if (player.name === this.localPlayerId || player.id === this.localPlayerId) {
-          //console.log('[FRONT] Encontrada coincidencia:', playerId, 'para', this.localPlayerId);
-          this.localPlayerId = playerId;
-          return;
+      if (Array.isArray(serverGameState.players)) {
+        for (const player of serverGameState.players) {
+          if (player.name === this.localPlayerId || player.id === this.localPlayerId) {
+            this.localPlayerId = player.name;
+            return;
+          }
         }
-      }
-      
-      // Si no hay coincidencia, usar el primer jugador disponible
-      if (serverGameState.players.size > 0) {
-        const firstPlayerId = Array.from(serverGameState.players.keys())[0];
-        //console.log('[FRONT] Usando primer jugador disponible:', firstPlayerId);
-        this.localPlayerId = firstPlayerId;
       }
     }
   }
   
   // Server reconciliation - MEJORADO
   public updateFromServer(serverGameState: GameState): void {
-    //console.log('[FRONT] === updateFromServer DEBUG ===');
-    //console.log('[FRONT] localPlayerId actual:', this.localPlayerId);
-    //console.log('[FRONT] serverGameState.players count:', serverGameState.players.size);
-    //console.log('[FRONT] serverGameState.players keys:', Array.from(serverGameState.players.keys()));
-    //console.log('[FRONT] serverGameState.gameStatus:', serverGameState.gameStatus);
-    
-    // Mostrar detalles de cada jugador
-    serverGameState.players.forEach((player, playerId) => {
-      console.log(`[FRONT] Player ${playerId}:`, {
-        id: player.id,
-        name: player.name,
-        alive: player.alive,
-        score: player.score
-      });
-    });
     
     // Actualizar localPlayerId si es necesario
     this.updateLocalPlayerId(serverGameState);
     
-    // Actualizar el estado directamente sin interpolación problemática
+    // Actualizar el estado directamente
     this.gameState = serverGameState;
     
     // Actualizar visuals inmediatamente
     this.updateVisuals();
     
-    //console.log('[FRONT] ==============================');
   }
   
   // Función de actualización visual MEJORADA
@@ -313,8 +251,12 @@ export class GameManager {
   }
   
   private renderPlayers(): void {
-    const { gridSize } = this.gameState;
+    const gridSize = this.gameState.gridSize || 20;
     const padding = 2;
+    
+    if (!Array.isArray(this.gameState.players)) {
+      return;
+    }
     
     this.gameState.players.forEach((player) => {
       if (!player.alive) return;
@@ -356,15 +298,19 @@ export class GameManager {
         sprites.push(graphics);
       });
 
-      this.playerSprites.set(player.id, sprites);
+      this.playerSprites.set(player.name, sprites);
     });
   }
   
   private renderFood(): void {
-    const { gridSize } = this.gameState;
+    const gridSize = this.gameState.gridSize || 20;
     const padding = 2;
     
-    this.gameState.food.forEach(food => {
+    if (!Array.isArray(this.gameState.fruits)) {
+      return;
+    }
+    
+    this.gameState.fruits.forEach(food => {
       const graphics = this.scene.add.graphics();
       
       // Convertir coordenadas de grilla a píxeles
@@ -386,38 +332,32 @@ export class GameManager {
   
   // Función helper para obtener color del jugador
   private getPlayerColor(colorString: string): number {
+    let color: number;
     if (colorString.startsWith('#')) {
-      return parseInt(colorString.replace('#', ''), 16);
+      color = Number('0x' + colorString.slice(1));
+    } else if (/^[0-9A-Fa-f]{6}$/.test(colorString)) {
+      color = Number('0x' + colorString);
+    } else {
+      color = 0x4CAF50;
     }
-    return 0x4CAF50; // Color por defecto
+    // Depuración: muestra el color recibido y el valor convertido
+    console.log('Color recibido:', colorString, 'Color usado:', color);
+    return color;
   }
   
   // Setter para roomId
   public setRoomId(roomId: string): void {
-    //console.log('[FRONT] Configurando roomId:', roomId);
     this.roomId = roomId;
   }
   
   // Setter para localPlayerId
   public setLocalPlayerId(playerId: string): void {
-    //console.log('[FRONT] Configurando localPlayerId:', playerId);
     this.localPlayerId = playerId;
   }
   
   // Método para debug del estado
   public debugState(): void {
-    //console.log('[FRONT] === DEBUG GAME MANAGER ===');
-    //console.log('[FRONT] roomId:', this.roomId);
-    //console.log('[FRONT] localPlayerId:', this.localPlayerId);
-    //console.log('[FRONT] gameStatus:', this.gameState.gameStatus);
-    //console.log('[FRONT] players count:', this.gameState.players.size);
-    //console.log('[FRONT] players keys:', Array.from(this.gameState.players.keys()));
-    //console.log('[FRONT] local player alive:', this.isLocalPlayerAlive());
-    //console.log('[FRONT] lastDirection:', this.lastDirection);
-    //console.log('[FRONT] lastMoveTime:', this.lastMoveTime);
-    
-    // Mostrar detalles del jugador local si existe
-    const localPlayer = this.gameState.players.get(this.localPlayerId);
+    const localPlayer = this.getLocalPlayer();
     if (localPlayer) {
       console.log('[FRONT] Local player details:', {
         id: localPlayer.id,
@@ -427,10 +367,9 @@ export class GameManager {
         snakeLength: localPlayer.snake.length
       });
     } else {
-      //console.log('[FRONT] Local player not found in gameState');
+      console.log('[FRONT] Local player not found in gameState');
     }
     
-    //console.log('[FRONT] ===========================');
   }
   
   // Public methods for React integration
@@ -439,13 +378,24 @@ export class GameManager {
   }
   
   public getLocalPlayer(): Player | undefined {
-    console.log("este es el usuario " + this.localPlayerId);
-    return this.gameState.players.get(this.localPlayerId);
+    
+    if (!Array.isArray(this.gameState.players)) {
+      return undefined;
+    }
+    
+    const foundPlayer = this.gameState.players.find(p => {
+      const nameMatch = p.name === this.localPlayerId;
+      const idMatch = p.id === this.localPlayerId;
+      return nameMatch || idMatch;
+    });
+    
+    return foundPlayer;
   }
   
   public getLeaderboard(): Player[] {
-    return Array.from(this.gameState.players.values())
-      .sort((a, b) => b.score - a.score);
+    return Array.isArray(this.gameState.players) 
+      ? [...this.gameState.players].sort((a, b) => b.score - a.score)
+      : [];
   }
   
   public destroy(): void {

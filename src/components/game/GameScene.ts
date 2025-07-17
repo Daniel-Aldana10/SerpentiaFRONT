@@ -18,7 +18,7 @@ export class GameScene extends Phaser.Scene {
     console.log('[FRONT] GameScene.create() llamado');
     
     // Inicializar el GameManager
-    this.gameManager = new GameManager(this, this.localPlayerId);
+    this.gameManager = new GameManager(this);
     console.log('[FRONT] GameManager creado con playerId:', this.localPlayerId);
     
     // Setup camera
@@ -51,6 +51,5 @@ export class GameScene extends Phaser.Scene {
   
   destroy(): void {
     this.gameManager?.destroy();
-    super.destroy();
   }
 }

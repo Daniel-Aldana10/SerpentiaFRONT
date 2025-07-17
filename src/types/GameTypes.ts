@@ -4,22 +4,26 @@ export interface Position {
 }
 
 export interface Player {
-  id: string;
+  id?: string;
   name: string;
   color: string;
   snake: Position[];
   direction: Direction;
   score: number;
   alive: boolean;
+  maxScore?: number;
 }
 
 export interface GameState {
-  players: Map<string, Player>;
-  food: Position[];
-  gridSize: number;
-  gameWidth: number;
-  gameHeight: number;
-  gameStatus: 'WAITING' | 'IN_GAME' | 'ENDED';
+  roomId: string;
+  width: number;
+  height: number;
+  players: Player[];
+  fruits: Position[];
+  status: 'WAITING' | 'IN_GAME' | 'FINISHED';
+  gridSize?: number;
+  gameWidth?: number;
+  gameHeight?: number;
 }
 
 export type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
@@ -37,11 +41,22 @@ export interface GameInput {
   timestamp: number;
 }
 
+export interface ScoreEvent {
+  type: 'SCORE_UPDATE' | 'GAME_END';
+  players: Player[];
+  playerId?: string;
+  pointsGained?: number;
+  message?: string;
+}
+
 export interface GameEvent {
-  type: 'START' | 'UPDATE' | 'END' | 'COLLISION' | 'FRUIT' | 'PLAYER_JOINED' | 'PLAYER_LEFT' | 'FOOD_EATEN' | 'PLAYER_DIED';
+  type: 'START' | 'UPDATE' | 'END' | 'COLLISION' | 'FRUIT' | 'PLAYER_JOINED' | 'PLAYER_LEFT' | 'FOOD_EATEN' | 'PLAYER_DIED' | 'SCORE_UPDATE' | 'GAME_END';
   gameState?: GameState;
+  board?: any;
   playerId?: string;
   playerName?: string;
   score?: number;
   message?: string;
+  players?: Player[];
+  pointsGained?: number;
 } 
