@@ -215,3 +215,69 @@ body {
     font-size: var(--font-size-sm);
   }
 }
+
+.profile-stats {
+  max-width: 420px;
+  margin: 40px auto;
+  background: #232526;
+  color: #fff;
+  border-radius: 18px;
+  padding: 36px 32px 32px 32px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  text-align: center;
+  position: relative;
+}
+
+.profile-logo span {
+  display: block;
+  margin: 0 auto;
+  filter: drop-shadow(0 2px 8px #0008);
+}
+
+.profile-logo h2 {
+  font-size: 2rem;
+  letter-spacing: 1px;
+  margin-top: 0.5rem;
+  color: #4CAF50;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 18px 0 10px 0;
+  gap: 16px;
+}
+
+.stat-row span {
+  flex: 1 0 120px;
+  text-align: left;
+  font-weight: 500;
+}
+
+.stat-bar {
+  flex: 2 0 160px;
+  height: 18px;
+  background: linear-gradient(90deg, #4CAF50 60%, #2196F3 100%);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #0002;
+  margin-left: 12px;
+  transition: width 0.5s cubic-bezier(.4,2,.6,1);
+}
+
+.btn.btn-primary {
+  background: linear-gradient(90deg, #4CAF50 60%, #2196F3 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 32px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #0002;
+  transition: background 0.2s;
+}
+
+.btn.btn-primary:hover {
+  background: linear-gradient(90deg, #43a047 60%, #1976d2 100%);
+}

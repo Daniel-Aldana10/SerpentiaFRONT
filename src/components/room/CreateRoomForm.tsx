@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import type { GameMode, CreateRoomForms } from '../types/types';
-import { useUser } from '../context/UserContext';
+import type { GameMode, CreateRoomForms } from '../../types/types';
+import { useUser } from '../../context/UserContext';
 
 interface Props {
   onCreate: (room: CreateRoomForms) => void;
