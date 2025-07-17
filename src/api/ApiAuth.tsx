@@ -1,10 +1,10 @@
 import type {AuthRequest, RegisterRequest} from '../types/types';
 import axiosInstance from './ApiAxios';
-import type { AxiosRequestConfig, AxiosError } from 'axios';
+import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { getCurrentUsername } from './ApiLobby';
 
 // Interceptor para agregar el token (si existe) en las solicitudes
-axiosInstance.interceptors.request.use((config: AxiosRequestConfig) => {
+axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = localStorage.getItem('authToken');
 
   const isAuthRoute = config.url?.includes('/auth/login') || config.url?.includes('/auth/register');

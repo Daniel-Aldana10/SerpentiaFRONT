@@ -12,7 +12,6 @@ interface SerpentiaGameProps {
   playerId: string;
   playerName: string;
   initialBoard?: GameState;
-  onGameEnd?: (finalScore: number) => void;
   onGameManagerChange?: (gameManager: GameManager | null) => void;
   onNavigate?: (screen: string, params?: any) => void;
   room: Room;
@@ -23,7 +22,6 @@ export const SerpentiaGame: React.FC<SerpentiaGameProps> = ({
   playerId,
   playerName,
   initialBoard,
-  onGameEnd,
   onGameManagerChange,
   onNavigate,
   room,
@@ -84,12 +82,6 @@ export const SerpentiaGame: React.FC<SerpentiaGameProps> = ({
           const players = board.players ? Object.values(board.players) as Player[] : [];
           const status = board.status || 'FINISHED';
           // Mostrar resultados finales
-          const winner = players.length > 0 ? players.reduce((prev: Player, current: Player) => (prev.score > current.score) ? prev : current) : { name: 'Unknown', score: 0 };
-          const notification = {
-            id: Date.now().toString(),
-            message: `🏆 ${winner.name} ganó con ${winner.score} puntos!`,
-            timestamp: Date.now()
-          };
           // Actualizar estado del juego
           if (gameManager) {
             const adaptedBoard = adaptBoardToGameState({

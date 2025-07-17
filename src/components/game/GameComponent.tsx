@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Phaser from 'phaser';
 import { GameScene } from './GameScene';
 import { GameManager } from './GameManager';
-import type { Player } from '../../types/types';
 
 interface GameComponentProps {
   playerId: string;
@@ -16,7 +15,6 @@ export const GameComponent: React.FC<GameComponentProps> = ({
   const gameRef = useRef<HTMLDivElement>(null);
   const phaserGameRef = useRef<Phaser.Game | null>(null);
   const gameSceneRef = useRef<GameScene | null>(null);
-  const [gameManager, setGameManager] = useState<GameManager | null>(null);
   
   useEffect(() => {
     if (!gameRef.current || phaserGameRef.current) return;
@@ -57,7 +55,6 @@ export const GameComponent: React.FC<GameComponentProps> = ({
     const setupGameManager = () => {
       const manager = gameSceneRef.current?.getGameManager();
       if (manager) {
-        setGameManager(manager);
         onGameStateChange?.(manager);
       } else {
         setTimeout(setupGameManager, 100);

@@ -3,8 +3,6 @@ import type { User, Room } from '../../types/types';
 import type { GameState, Player, Direction } from '../../types/types';
 import './GameScreen.css';
 import { SerpentiaGame } from './SerpentiaGame';
-import { GameManager } from './GameManager';
-import { getCurrentUsername } from '../../api/ApiLobby';
 import webSocketService from '../../api/WebSocketService';
 
 export function adaptBoardToGameState(board: any): GameState {
@@ -56,7 +54,6 @@ interface GameScreenProps {
 }
 
 const GameScreen: React.FC<GameScreenProps> = ({ user, room, board, rooms, onNavigate}) => {
-  const [gameManager, setGameManager] = useState<GameManager | null>(null);
   const [gameBoard, setGameBoard] = useState<any>(board);
 
   useEffect(() => {
@@ -92,7 +89,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ user, room, board, rooms, onNav
                 playerId={user.username} 
                 playerName={user.username} 
                 initialBoard={adaptedBoard}
-                onGameManagerChange={setGameManager}
+                onGameManagerChange={undefined}
                 onNavigate={onNavigate}
                 room={room}
                 rooms={rooms} // <-- pasa rooms aquí

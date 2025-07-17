@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
-import type { Screen } from '../App';
-import type { User } from '../types/types';
 import './AuthScreen.css';
 import { registerUser } from '../api/ApiAuth';
 
 interface RegisterScreenProps {
-  onNavigate: (screen: Screen) => void;
-  onLogin: (token: string) => void;
+  onNavigate: (screen: string) => void;
 }
 
-const RegisterScreen: React.FC<RegisterScreenProps> = ({ onNavigate, onLogin }) => {
+const RegisterScreen: React.FC<RegisterScreenProps> = ({ onNavigate }) => {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -18,8 +15,6 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onNavigate, onLogin }) 
   });
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [success, setSuccess] = useState<string | null>(null);
-  const [mensajeEspecial, setMensajeEspecial] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -60,25 +55,21 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onNavigate, onLogin }) 
     if (!validateForm()) return;
 
     setIsLoading(true);
-    setMensajeEspecial('');
 
     try {
       
       const { username, email, password } = formData;
-      const response = await registerUser({ username, email, password });
+      await registerUser({ username, email, password });
       
-      setSuccess('Usuario registrado exitosamente. Ahora puedes iniciar sesión.');
-      setTimeout(() => onNavigate('login'), 1500);
+      alert('Usuario registrado exitosamente. Ahora puedes iniciar sesión.');
+      onNavigate('login');
     } catch (err: any) {
       if (err.response && err.response.data) {
         setErrors({ general: err.response.data.message });
-        setMensajeEspecial(err.response.data.mensajeEspecial || '');
       } else if (err.message) {
         setErrors({ general: err.message });
-        setMensajeEspecial('');
       } else {
         setErrors({ general: 'Error al crear la cuenta. Intenta nuevamente.' });
-        setMensajeEspecial('');
       }
     } finally {
       setIsLoading(false);

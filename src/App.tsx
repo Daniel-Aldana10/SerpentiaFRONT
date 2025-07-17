@@ -34,17 +34,6 @@ function App() {
     }
   };
 
-  const handleLogin = (token: string) => {
-    setCurrentScreen('rooms');
-    // Aquí podrías setear el usuario si lo obtienes del token
-  };
-
-  const handleLogout = () => {
-    setUser(null);
-    setCurrentScreen('welcome');
-    setCurrentRoom(null);
-  };
-
   const handleLeaveWaitingRoom = async () => {
     if (currentRoom) {
       await lobbyWebSocketService.leaveRoom(currentRoom.roomId);
@@ -58,9 +47,9 @@ function App() {
       case 'welcome':
         return <WelcomeScreen onNavigate={handleNavigate} />;
       case 'login':
-        return <LoginScreen onNavigate={handleNavigate} onLogin={handleLogin} />;
+        return <LoginScreen onNavigate={handleNavigate} />;
       case 'register':
-        return <RegisterScreen onNavigate={handleNavigate} onLogin={handleLogin} />;
+        return <RegisterScreen onNavigate={handleNavigate} />;
       case 'rooms':
         return (
           <RoomScreen
@@ -68,7 +57,6 @@ function App() {
             onNavigate={handleNavigate}
             rooms={rooms}
             setRooms={setRooms}
-            user={user}
             onProfileClick={() => handleNavigate('profile')}
           />
         );

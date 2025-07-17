@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import type { GameState, Player, Position, GameInput, ScoreEvent } from '../../types/types';
+import type { GameState, Player, Position } from '../../types/types';
 import { Direction } from '../../types/types';
 import gameService from '../../api/ApiGame';
 import { getCurrentUsername } from '../../api/ApiLobby';

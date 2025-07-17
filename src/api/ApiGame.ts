@@ -2,7 +2,6 @@ import { Client } from '@stomp/stompjs';
 import type { IMessage } from '@stomp/stompjs';
 // @ts-ignore
 import SockJS from 'sockjs-client';
-import type { GameEvent } from '../types/types';
 
 const WS_URL = import.meta.env.VITE_WS_URL;
 

@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import type { Screen } from '../App';
 import './AuthScreen.css';
 import { loginUser } from '../api/ApiAuth';
 import { useUser } from '../context/UserContext';
 
 interface LoginScreenProps {
-  onNavigate: (screen: Screen) => void;
-  onLogin: (token: string) => void;
+  onNavigate: (screen: string) => void;
+  onLogin?: (token: string) => void;
 }
 
 const LoginScreen: React.FC<LoginScreenProps> = ({ onNavigate, onLogin }) => {
@@ -17,7 +16,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onNavigate, onLogin }) => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [mensajeEspecial, setMensajeEspecial] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -29,7 +27,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onNavigate, onLogin }) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
-    setMensajeEspecial('');
 
     try {
       const { username, password } = formData;
@@ -39,17 +36,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onNavigate, onLogin }) => {
       
       const token = await loginUser({ username, password });
       refreshUsername();
-      onLogin(token);
+      onLogin && onLogin(token);
     } catch (err: any) {
       if (err.response && err.response.data) {
         setError(err.response.data.message || '');
-        setMensajeEspecial(err.response.data.mensajeEspecial || '');
       } else if (err.message) {
         setError(err.message);
-        setMensajeEspecial('');
       } else {
         setError('Error al iniciar sesión');
-        setMensajeEspecial('');
       }
     } finally {
       setIsLoading(false);
