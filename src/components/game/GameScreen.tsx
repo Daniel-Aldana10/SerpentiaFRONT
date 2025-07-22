@@ -15,13 +15,37 @@ export function adaptBoardToGameState(board: any): GameState {
       height: 30,
       players: [],
       fruits: [],
-      status: 'WAITING'
+      status: 'WAITING',
+      gameMode: 'COMPETITIVE',
+      teams: {},
+      playerToTeam: {},
+      targetScore: 100
     };
   }
 
-  if (board && board.players && Array.isArray(board.players)) {
-    players.push(...board.players);
-  } else if (board && board.snakePositions && board.snakeDirections) {
+  // Manejar la nueva estructura de datos del servidor
+  if (board.players && typeof board.players === 'object') {
+    // board.players es un objeto con playerName -> Player
+    Object.values(board.players).forEach((player: any) => {
+      if (player && typeof player === 'object') {
+        // Obtener la posición actual de la serpiente desde snakePositions
+        const snakePositions = board.snakePositions?.[player.name] || player.snake || [];
+        const direction = board.snakeDirections?.[player.name] || player.direction || 'UP';
+        
+        players.push({
+          id: player.name,
+          name: player.name,
+          color: player.color || '#4CAF50',
+          snake: snakePositions,
+          direction: direction as Direction,
+          score: player.score || 0,
+          alive: player.alive !== false,
+          maxScore: player.maxScore || 0
+        });
+      }
+    });
+  } else if (board.snakePositions && board.snakeDirections) {
+    // Fallback a la estructura anterior
     for (const playerId in board.snakePositions) {
       players.push({
         id: playerId,
@@ -41,7 +65,11 @@ export function adaptBoardToGameState(board: any): GameState {
     height: board.height || 30,
     players,
     fruits: board.fruits || board.food || [],
-    status: board.status || 'WAITING'
+    status: board.status || 'WAITING',
+    gameMode: board.gameMode || 'COMPETITIVE',
+    teams: board.teams || {},
+    playerToTeam: board.playerToTeam || {},
+    targetScore: board.targetScore || 100
   };
 }
 
@@ -49,7 +77,7 @@ interface GameScreenProps {
   user: User | null;
   room: Room;
   board?: any;
-  rooms: Room[]; // <-- nueva prop
+  rooms: Room[];
   onNavigate: (screen: string, params?: any) => void;
 }
 
@@ -92,7 +120,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ user, room, board, rooms, onNav
                 onGameManagerChange={undefined}
                 onNavigate={onNavigate}
                 room={room}
-                rooms={rooms} // <-- pasa rooms aquí
+                rooms={rooms}
               />
             )}
           </div>

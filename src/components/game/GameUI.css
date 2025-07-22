@@ -1,81 +1,181 @@
-/* Game UI Styles */
-/* Fondo oscuro translúcido para paneles principales */
 .game-ui {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #232526 0%, #414345 100%);
+  color: #fff;
+  border-radius: 12px;
+  min-width: 280px;
+  max-width: 320px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+/* Player Info */
 .player-info {
-  background: linear-gradient(135deg, #232526, #181818 80%);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
   padding: 1rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  backdrop-filter: blur(10px);
 }
 
 .player-info h3 {
   margin: 0 0 0.5rem 0;
-  font-size: 1.2rem;
+  color: #4CAF50;
+  font-size: 1.1rem;
 }
 
 .player-status {
-  font-weight: bold;
-  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
 }
 
 .player-max-score {
-  font-size: 0.9rem;
-  opacity: 0.9;
+  font-size: 0.8rem;
+  color: #ccc;
 }
 
-.player-survival-time {
-  font-size: 0.9rem;
-  opacity: 0.9;
-}
-
-.game-status, .leaderboard {
-  background: rgba(30, 30, 30, 0.85);
-  color: #fff;
-  border-radius: 10px;
-  border-left: 4px solid #4CAF50;
+/* Game Status */
+.game-status {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
 }
 
 .game-status h4 {
   margin: 0 0 0.5rem 0;
-  color: #333;
+  font-size: 1rem;
+  color: #fff;
 }
 
 .status-indicator {
-  font-weight: bold;
-  padding: 0.5rem;
+  padding: 0.25rem 0.5rem;
   border-radius: 4px;
-  text-align: center;
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+  display: inline-block;
 }
 
 .status-indicator.waiting {
-  background: #232526;
-  color: #ffb300;
-}
-.status-indicator.in_game {
-  background: #232526;
-  color: #4CAF50;
-}
-.status-indicator.finished {
-  background: #232526;
-  color: #e53935;
+  background-color: #ff9800;
+  color: #fff;
 }
 
-.leaderboard {
-  background: rgba(255, 255, 255, 0.9);
-  padding: 1rem;
+.status-indicator.in_game {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+.status-indicator.finished {
+  background-color: #f44336;
+  color: #fff;
+}
+
+.game-mode, .target-score {
+  font-size: 0.85rem;
+  color: #ccc;
+  margin-bottom: 0.25rem;
+}
+
+/* Team Leaderboard */
+.team-leaderboard {
+  margin-bottom: 1rem;
+}
+
+.team-leaderboard h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.teams-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.team-card {
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 8px;
+  padding: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.team-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.team-rank {
+  font-size: 0.9rem;
+  color: #4CAF50;
+  min-width: 24px;
+}
+
+.team-name {
+  flex-grow: 1;
+  font-size: 0.9rem;
+}
+
+.team-score {
+  font-size: 0.85rem;
+  color: #4CAF50;
+}
+
+.team-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.team-members {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-left: 0.5rem;
+}
+
+.team-member {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.team-member.current-player {
+  background-color: rgba(76, 175, 80, 0.2);
+  border-left: 3px solid #4CAF50;
+  padding-left: 0.5rem;
+}
+
+.member-name {
+  flex-grow: 1;
+}
+
+.member-score {
+  color: #ccc;
+  font-size: 0.75rem;
+}
+
+.member-status {
+  font-size: 0.7rem;
+}
+
+/* Individual Leaderboard */
+.leaderboard {
+  margin-bottom: 1rem;
 }
 
 .leaderboard h3 {
-  margin: 0 0 1rem 0;
-  color: #333;
-  text-align: center;
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  color: #fff;
 }
 
 .leaderboard ol {
@@ -87,128 +187,71 @@
 .leaderboard-item {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
   padding: 0.5rem;
-  margin-bottom: 0.5rem;
-  background: rgba(40, 40, 40, 0.85);
+  margin-bottom: 0.25rem;
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 6px;
-  border-left: 3px solid #4CAF50;
+  font-size: 0.85rem;
   transition: all 0.2s ease;
 }
 
+.leaderboard-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
 .leaderboard-item.current-player {
-  background: linear-gradient(135deg, #232526, #4CAF50);
-  color: #fff;
-  transform: scale(1.02);
+  background-color: rgba(76, 175, 80, 0.2);
+  border-left: 3px solid #4CAF50;
+  padding-left: 0.75rem;
 }
 
 .player-rank {
-  font-weight: bold;
-  margin-right: 0.5rem;
-  min-width: 30px;
+  font-weight: 600;
+  color: #4CAF50;
+  min-width: 24px;
 }
 
 .player-name {
-  flex: 1;
+  flex-grow: 1;
   font-weight: 500;
 }
 
 .player-score {
-  font-weight: bold;
-  margin-right: 0.5rem;
+  font-size: 0.8rem;
+  color: #4CAF50;
+  font-weight: 600;
 }
 
 .player-color {
-  width: 20px;
-  height: 20px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  margin-right: 0.5rem;
-  border: 2px solid #232526;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .player-status-indicator {
-  font-size: 1.2rem;
+  font-size: 0.7rem;
 }
 
-.game-instructions {
-  background: rgba(255, 255, 255, 0.9);
-  padding: 1rem;
-  border-radius: 8px;
-  border-left: 4px solid #2196F3;
-}
-
-.game-instructions h4 {
-  margin: 0 0 0.5rem 0;
-  color: #333;
-}
-
-.game-instructions p {
-  margin: 0.3rem 0;
-  color: #666;
-  font-size: 0.9rem;
-}
-
-.controls-help {
-  background: rgba(30, 30, 30, 0.85);
-  color: #eee;
-  border-radius: 10px;
-}
-
-/* Score Notifications */
-/* Notificaciones de puntuación sobre fondo oscuro */
-.score-notifications {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1000;
-}
-
-.score-notification {
-  background: linear-gradient(45deg, #232526, #4CAF50);
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 25px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  margin-bottom: 10px;
-  animation: slideInRight 0.5s ease-out;
-  font-weight: bold;
-  text-align: center;
-}
-
-@keyframes slideInRight {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-/* Responsive Design */
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .game-ui {
-    gap: 0.5rem;
-  }
-  
-  .player-info,
-  .game-status,
-  .leaderboard,
-  .game-instructions {
+    min-width: 240px;
+    max-width: 280px;
     padding: 0.75rem;
   }
   
-  .leaderboard-item {
-    padding: 0.4rem;
-    font-size: 0.9rem;
+  .player-info h3 {
+    font-size: 1rem;
   }
   
-  .player-rank {
-    min-width: 25px;
+  .leaderboard-item,
+  .team-member {
+    font-size: 0.8rem;
   }
   
-  .player-color {
-    width: 16px;
-    height: 16px;
+  .team-header {
+    font-size: 0.85rem;
   }
-} 
+}
