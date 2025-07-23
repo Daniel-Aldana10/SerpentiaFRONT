@@ -21,7 +21,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onNavigate }) => {
         <div className="welcome-content">
           <div className="game-description">
             <p>
-             Sumérgete en la experiencia clásica de la serpiente con power-ups únicos y desafíos emocionantes.
+             Sumérgete en la experiencia clásica de la serpiente con desafíos emocionantes.
             ¡Compite o únete con tu equipo para lograr el objetivo!
             </p>
           </div>
