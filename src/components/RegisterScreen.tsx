@@ -9,7 +9,7 @@ interface RegisterScreenProps {
 const RegisterScreen: React.FC<RegisterScreenProps> = ({ onNavigate }) => {
   const [formData, setFormData] = useState({
     username: '',
-    email: '',
+
     password: '',
     confirmPassword: ''
   });
@@ -33,9 +33,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onNavigate }) => {
       newErrors.username = 'El nombre de usuario debe tener al menos 3 caracteres';
     }
 
-    if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email inválido';
-    }
+   
 
     if (formData.password.length < 6) {
       newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
@@ -58,8 +56,8 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onNavigate }) => {
 
     try {
       
-      const { username, email, password } = formData;
-      await registerUser({ username, email, password });
+      const { username,  password } = formData;
+      await registerUser({ username,  password });
       
       alert('Usuario registrado exitosamente. Ahora puedes iniciar sesión.');
       onNavigate('login');
@@ -108,20 +106,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onNavigate }) => {
             {errors.username && <span className="field-error">{errors.username}</span>}
           </div>
 
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              placeholder="tu@email.com"
-              required
-              className={errors.email ? 'error' : ''}
-            />
-            {errors.email && <span className="field-error">{errors.email}</span>}
-          </div>
+          
 
           <div className="form-group">
             <label htmlFor="password">Contraseña</label>
